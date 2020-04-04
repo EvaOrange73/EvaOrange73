@@ -1,0 +1,21 @@
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background: antiquewhite;
+    overflow: hidden;
+}
+
+#ball{
+    border-radius: 100%;
+    background: black;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+
+}
