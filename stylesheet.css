@@ -10,10 +10,6 @@ body {
 }
 
 #ball{
-    border-radius: 100%;
-    background: black;
-    width: 100px;
-    height: 100px;
     position: absolute;
     left: 50%;
     top: 50%;
