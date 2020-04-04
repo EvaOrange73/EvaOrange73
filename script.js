@@ -9,7 +9,7 @@ function moveBall(e){
     let bodyCoords = document.body.getBoundingClientRect();
     let ballCoords = ball.getBoundingClientRect();
 
-    let bx = ballCoords.lef;
+    let bx = ballCoords.left;
     let by = ballCoords.top;
 
     let mx = e.clientX;
