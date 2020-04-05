@@ -30,9 +30,13 @@ function moveBall(e){
     bx += v * Math.cos(alpha);
     by += v * Math.sin(alpha);
 
-    if (ballCoords.right >= bodyCoords.right || ballCoords.left <= 0) {
+    if (ballCoords.right >= bodyCoords.right){
+        bx = bodyCoords.right - 101;
+    } else if (ballCoords.left <= 0) {
         bx = 1;
-    } else if(ballCoords.bottom >= bodyCoords.bottom || ballCoords.top <= 0){
+    } else if (ballCoords.bottom >= bodyCoords.bottom){
+        by = bodyCoords.bottom - 101;
+    } else if (ballCoords.top <= 0){
         by = 1;
     }
     ball.style.left = `${bx}px`;
