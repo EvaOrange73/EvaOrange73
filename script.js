@@ -1,175 +1,140 @@
-function newBall(radius, color, name, x, y) {
+function drawBall(ball) {
     let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("width", 2 * radius);
-    svg.setAttribute("height", 2 * radius);
-    svg.setAttribute("style", "position:absolute");
-    svg.setAttribute("id", name);
-
-    svg.style.transform = "translate(" + x + "px," + y + "px)";
+    svg.setAttribute("width", `${2 * ball.radius}`);
+    svg.setAttribute("height", `${2 * ball.radius}`);
+    svg.id = ball.name;
+    svg.style.transform = "translate(" + ball.x + "px," + ball.y + "px)";
 
     let cir = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    cir.setAttribute("cx", radius);
-    cir.setAttribute("cy", radius);
-    cir.setAttribute("r", radius);
-    cir.setAttribute("fill", color);
+    cir.setAttribute("cx", ball.radius);
+    cir.setAttribute("cy", ball.radius);
+    cir.setAttribute("r", ball.radius);
+    cir.setAttribute("fill", ball.color);
 
     svg.appendChild(cir);
     document.body.appendChild(svg);
-
-};
-
-function params(i) {
-    littleBalls[i].name = String(i);
-
-    littleBalls[i].color = '#' + Math.floor(Math.random() * 256 * 256 * 256).toString(16)
-
-    littleBalls[i].radius = 5 + Math.random() * 10; //radius
-
-    littleBalls[i].speed = 1 + Math.random() * 5; //speed
-    littleBalls[i].beta = Math.random() * 2 * Math.PI //beta
-
-    littleBalls[i].x = Math.random() * bodyCoords.right; //x
-    littleBalls[i].y = Math.random() * bodyCoords.bottom; //y
-
 }
 
+function generateRandomColor() {
+    let byte = () => Math.floor(Math.random() * 255);
+    return `rgb(${byte()}, ${byte()}, ${byte()}`;
+}
 
-function moveBall(name) {
-    let ball = document.getElementById(name);
+function generateRandomLittleBall(i) {
+    return {
+        name: String(i),
+        color: generateRandomColor(),
+        radius: 5 + Math.random() * 10,
+        speed: 1 + Math.random() * 5,
+        alpha: Math.random() * 2 * Math.PI,
+        x: Math.random() * bodyCoords.right,
+        y: Math.random() * bodyCoords.bottom
+    };
+}
 
-    let ballCoords = ball.getBoundingClientRect();
+function moveBall(ball) {
+    ball.alpha = calculateAlpha(ball.x, ball.y, ball.radius, mx, my);
 
-    let bx = ballCoords.left;
-    let by = ballCoords.top;
+    let ballHTMLElement = document.getElementById(ball.name);
+    let distance = Math.sqrt((mx - (ball.x + 50)) ** 2 + (my - (ball.y + 50)) ** 2);
 
-    document.addEventListener('mousemove', function (e) {
-        changeAlpha(e, name)
-    }, false);
-
-    let R = Math.sqrt((mx - (bx + 50)) ** 2 + (my - (by + 50)) ** 2)
-    if (R > 100) {
-        v = V;
-    } else if (R > 40) {
-        v = R * V / 100;
+    //TODO calculating distance as function
+    if (distance > 100) {
+        ball.speed = V;
+    } else if (distance > 40) {
+        ball.speed = distance * V / 100;
     } else {
-        v = 0;
+        ball.speed = 0;
     }
 
-    bx += v * Math.cos(alpha);
-    by += v * Math.sin(alpha);
+    ball.x = Math.min(bodyCoords.right - ball.radius * 2,
+        Math.max(0, ball.x + ball.speed * Math.cos(ball.alpha)));
 
-    if (ballCoords.right >= bodyCoords.right) {
-        bx = bodyCoords.right - 101;
-    } else if (ballCoords.left <= 0) {
-        bx = 1;
-    } else if (ballCoords.bottom >= bodyCoords.bottom) {
-        by = bodyCoords.bottom - 101;
-    } else if (ballCoords.top <= 0) {
-        by = 1;
-    }
+    ball.y = Math.min(bodyCoords.bottom - ball.radius * 2,
+        Math.max(0, ball.y + ball.speed * Math.sin(ball.alpha)));
 
-    ball.style.transform = "translate(" + bx + "px," + by + "px)";
-
+    ballHTMLElement.style.transform = "translate(" + ball.x + "px," + ball.y + "px)";
 }
 
-function changeAlpha(e, name) {
-    let ball = document.getElementById(name);
-    let ballCoords = ball.getBoundingClientRect();
-
-    let bx = ballCoords.left;
-    let by = ballCoords.top;
-
-    mx = e.clientX;
-    my = e.clientY;
-
-    let dx = mx - bx - 50;
-    let dy = my - by - 50;
+function calculateAlpha(x, y, r, mx, my) {
+    let dx = mx - x - r;
+    let dy = my - y - r;
 
     alpha = Math.atan(dy / dx);
     if (dx < 0) {
-        alpha = Math.PI + alpha;
+        return Math.PI + alpha;
     }
-
     return alpha;
-
 }
 
 
-function moveLittleBalls(object, name, x, y, speed, beta, radius) {
-    let svg = document.getElementById(name)
+function moveLittleBall(ball) {
+    let svg = document.getElementById(ball.name)
 
-    x += speed * Math.cos(beta);
-    y += speed * Math.sin(beta);
+    //TODO create common move-function
+    ball.x = Math.min(bodyCoords.right - ball.radius * 2,
+        Math.max(0, ball.x + ball.speed * Math.cos(ball.alpha)));
 
-    if (x + 2 * radius >= bodyCoords.right) {
-        x = bodyCoords.right - (2 * radius);
-        object.beta = Math.PI - beta;
-    } else if (x <= 0) {
-        object.beta = Math.PI - beta;
-        x = 0;
-    } else if (y + 2 * radius >= bodyCoords.bottom) {
-        y = bodyCoords.bottom - (2 * radius);
-        object.beta = -beta;
-    } else if (y <= 0) {
-        y = 0;
-        object.beta = -beta;
+    ball.y = Math.min(bodyCoords.bottom - ball.radius * 2,
+        Math.max(0, ball.y + ball.speed * Math.sin(ball.alpha)));
+
+    if (ball.x + 2 * ball.radius >= bodyCoords.right) {
+        ball.alpha = Math.PI - ball.alpha;
+    } else if (ball.x <= 0) {
+        ball.alpha = Math.PI - ball.alpha;
+    } else if (ball.y + 2 * ball.radius >= bodyCoords.bottom) {
+        ball.alpha = -ball.alpha;
+    } else if (ball.y <= 0) {
+        ball.alpha = -ball.alpha;
     }
 
-    svg.style.transform = "translate(" + x + "px," + y + "px)";
-
-    object.x = x;
-    object.y = y;
-
+    svg.style.transform = "translate(" + ball.x + "px," + ball.y + "px)";
 }
 
-
+//TODO start script when window is loaded
 let bodyCoords = document.body.getBoundingClientRect();
-window.addEventListener('resize', function () {
-    bodyCoords = document.body.getBoundingClientRect()
-}, false);
+window.onload = e => bodyCoords = document.body.getBoundingClientRect();
+window.onresize = e => bodyCoords = document.body.getBoundingClientRect();
 
 //Движение большого шарика
-let mainBall = "mainBall";
 let alpha = 0;
 let V = 7;
 let BALL_X = 100;
 let BALL_Y = 100;
-let mx;
-let my;
+//TODO calculate mouse position
+let mx = 0;
+let my = 0;
 
-
-newBall(50, "black", mainBall, BALL_X, BALL_Y);
-setInterval(function () {
-    moveBall(mainBall)
-}, 40);
-
-
-//Движение маленьких шариков
+//Количество маленьких шариков
 let k = 1000;
+
+document.onmousemove = (e) => {
+    mx = e.clientX;
+    my = e.clientY;
+};
+
+let mainBall = {
+    name: "mainBall",
+    radius: 50,
+    color: "black",
+    speed: V,
+    alpha: alpha,
+    x: BALL_X,
+    y: BALL_Y
+};
+
+drawBall(mainBall);
 
 let littleBalls = [];
 for (let i = 0; i < k; i++) {
-
-    littleBalls[i] = {};
-
-    params(i);
-
-    newBall(littleBalls[i].radius,
-        littleBalls[i].color,
-        littleBalls[i].name,
-        littleBalls[i].x,
-        littleBalls[i].y);
+    littleBalls[i] = generateRandomLittleBall(i);
+    drawBall(littleBalls[i]);
 }
 
-
-setInterval(function () {
+//TODO change to requestAnimationFrame
+setInterval(() => {
+    moveBall(mainBall);
     for (let i = 0; i < k; i++) {
-        moveLittleBalls(littleBalls[i],
-            littleBalls[i].name,
-            littleBalls[i].x,
-            littleBalls[i].y,
-            littleBalls[i].speed,
-            littleBalls[i].beta,
-            littleBalls[i].radius);
+        moveLittleBall(littleBalls[i]);
     }
 }, 40);
