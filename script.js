@@ -21,6 +21,8 @@ function drawBall(ball) {
 
 }
 
+}
+
 function generateRandomColor() {
     let byte = () => Math.floor(Math.random() * 255);
     return `rgb(${byte()}, ${byte()}, ${byte()}`;
@@ -140,4 +142,8 @@ requestAnimationFrame(function f() {
     for (let i = 0; i < k; i++) {
         moveBall(littleBalls[i]);
     }
+<<<<<<< HEAD
 });
+=======
+}, 40);
+>>>>>>> b48e97a42ceda5442b1fa507e68ebc0710778900
