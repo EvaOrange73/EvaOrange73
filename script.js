@@ -13,6 +13,13 @@ function drawBall(ball) {
 
     svg.appendChild(cir);
     document.body.appendChild(svg);
+}
+
+}
+
+}
+
+}
 
 function generateRandomColor() {
     let byte = () => Math.floor(Math.random() * 255);
@@ -24,35 +31,35 @@ function generateRandomLittleBall(i) {
         name: String(i),
         color: generateRandomColor(),
         radius: 5 + Math.random() * 10,
-        speed: 1 + Math.random() * 5,
+        speed: 1 + Math.random() * 2,
         alpha: Math.random() * 2 * Math.PI,
         x: Math.random() * bodyCoords.right,
         y: Math.random() * bodyCoords.bottom
     };
 }
 
-
-function calculateDistanceToCursor(ball){
+function calculateDistanceToCursor(ball) {
     return Math.sqrt((mx - (ball.x + 50)) ** 2 + (my - (ball.y + 50)) ** 2);
 }
 
-function changeSpeed(ball){
+function changeSpeed(ball) {
     let distance = calculateDistanceToCursor(ball);
+
     if (distance > 100) {
         ball.speed = V;
     } else if (distance > 40) {
         ball.speed = distance * V / 100;
     } else {
         ball.speed = 0;
+
     }
 }
 
-
 function moveBall(ball) {
-    if (ball == mainBall){
+    if (ball == mainBall) {
         changeSpeed(ball);
         ball.alpha = calculateAlpha(ball.x, ball.y, ball.radius, mx, my);
-    }else{
+    } else {
         if (ball.x + 2 * ball.radius >= bodyCoords.right) {
             ball.alpha = Math.PI - ball.alpha;
         } else if (ball.x <= 0) {
@@ -86,24 +93,23 @@ function calculateAlpha(x, y, r, mx, my) {
 }
 
 
-
-
 //TODO start script when window is loaded
 let bodyCoords = document.body.getBoundingClientRect();
 window.onload = e => bodyCoords = document.body.getBoundingClientRect();
 window.onresize = e => bodyCoords = document.body.getBoundingClientRect();
 
-//Движение большого шарика
-let alpha = 0;
+//Константы для большого шарика
+let BALL_R = 50;
 let V = 7;
-let BALL_X = 100;
-let BALL_Y = 100;
-//TODO calculate mouse position
-let mx = 0;
-let my = 0;
+let BALL_X = bodyCoords.right / 2 - BALL_R;
+let BALL_Y = bodyCoords.bottom / 2 - BALL_R;
+
+//Изначальная позиция мышки
+let mx = bodyCoords.right / 2 + 1;
+let my = bodyCoords.bottom / 2 + 1;
 
 //Количество маленьких шариков
-let k = 1000;
+let k = 100;
 
 document.onmousemove = (e) => {
     mx = e.clientX;
@@ -112,15 +118,16 @@ document.onmousemove = (e) => {
 
 let mainBall = {
     name: "mainBall",
-    radius: 50,
+    radius: BALL_R,
     color: "black",
     speed: V,
-    alpha: alpha,
+    alpha: 0,
     x: BALL_X,
     y: BALL_Y
 };
 
 drawBall(mainBall);
+
 
 let littleBalls = [];
 for (let i = 0; i < k; i++) {
@@ -128,10 +135,9 @@ for (let i = 0; i < k; i++) {
     drawBall(littleBalls[i]);
 }
 
-//TODO change to requestAnimationFrame
-setInterval(() => {
+requestAnimationFrame(function f() {
     moveBall(mainBall);
     for (let i = 0; i < k; i++) {
         moveBall(littleBalls[i]);
     }
-}, 40);
+});
