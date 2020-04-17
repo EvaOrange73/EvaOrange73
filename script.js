@@ -15,14 +15,6 @@ function drawBall(ball) {
     document.body.appendChild(svg);
 }
 
-}
-
-}
-
-}
-
-}
-
 function generateRandomColor() {
     let byte = () => Math.floor(Math.random() * 255);
     return `rgb(${byte()}, ${byte()}, ${byte()}`;
@@ -141,9 +133,7 @@ requestAnimationFrame(function f() {
     moveBall(mainBall);
     for (let i = 0; i < k; i++) {
         moveBall(littleBalls[i]);
-    }
-<<<<<<< HEAD
+    };
+    requestAnimationFrame(f);
 });
-=======
-}, 40);
->>>>>>> b48e97a42ceda5442b1fa507e68ebc0710778900
+
