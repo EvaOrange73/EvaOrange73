@@ -13,6 +13,7 @@ function drawBall(ball) {
 
     svg.appendChild(cir);
     document.body.appendChild(svg);
+
 }
 
 function generateRandomColor() {
@@ -32,19 +33,39 @@ function generateRandomLittleBall(i) {
     };
 }
 
-function moveBall(ball) {
-    ball.alpha = calculateAlpha(ball.x, ball.y, ball.radius, mx, my);
 
-    let ballHTMLElement = document.getElementById(ball.name);
-    let distance = Math.sqrt((mx - (ball.x + 50)) ** 2 + (my - (ball.y + 50)) ** 2);
+function calculateDistanceToCursor(ball){
+    return Math.sqrt((mx - (ball.x + 50)) ** 2 + (my - (ball.y + 50)) ** 2);
+}
 
-    //TODO calculating distance as function
+function changeSpeed(ball){
+    let distance = calculateDistanceToCursor(ball);
+
     if (distance > 100) {
         ball.speed = V;
     } else if (distance > 40) {
         ball.speed = distance * V / 100;
     } else {
         ball.speed = 0;
+
+    }
+}
+
+
+function moveBall(ball) {
+    if (ball == mainBall){
+        changeSpeed(ball);
+        ball.alpha = calculateAlpha(ball.x, ball.y, ball.radius, mx, my);
+    }else{
+        if (ball.x + 2 * ball.radius >= bodyCoords.right) {
+            ball.alpha = Math.PI - ball.alpha;
+        } else if (ball.x <= 0) {
+            ball.alpha = Math.PI - ball.alpha;
+        } else if (ball.y + 2 * ball.radius >= bodyCoords.bottom) {
+            ball.alpha = -ball.alpha;
+        } else if (ball.y <= 0) {
+            ball.alpha = -ball.alpha;
+        }
     }
 
     ball.x = Math.min(bodyCoords.right - ball.radius * 2,
@@ -53,6 +74,7 @@ function moveBall(ball) {
     ball.y = Math.min(bodyCoords.bottom - ball.radius * 2,
         Math.max(0, ball.y + ball.speed * Math.sin(ball.alpha)));
 
+    let ballHTMLElement = document.getElementById(ball.name);
     ballHTMLElement.style.transform = "translate(" + ball.x + "px," + ball.y + "px)";
 }
 
@@ -68,28 +90,7 @@ function calculateAlpha(x, y, r, mx, my) {
 }
 
 
-function moveLittleBall(ball) {
-    let svg = document.getElementById(ball.name)
 
-    //TODO create common move-function
-    ball.x = Math.min(bodyCoords.right - ball.radius * 2,
-        Math.max(0, ball.x + ball.speed * Math.cos(ball.alpha)));
-
-    ball.y = Math.min(bodyCoords.bottom - ball.radius * 2,
-        Math.max(0, ball.y + ball.speed * Math.sin(ball.alpha)));
-
-    if (ball.x + 2 * ball.radius >= bodyCoords.right) {
-        ball.alpha = Math.PI - ball.alpha;
-    } else if (ball.x <= 0) {
-        ball.alpha = Math.PI - ball.alpha;
-    } else if (ball.y + 2 * ball.radius >= bodyCoords.bottom) {
-        ball.alpha = -ball.alpha;
-    } else if (ball.y <= 0) {
-        ball.alpha = -ball.alpha;
-    }
-
-    svg.style.transform = "translate(" + ball.x + "px," + ball.y + "px)";
-}
 
 //TODO start script when window is loaded
 let bodyCoords = document.body.getBoundingClientRect();
@@ -125,6 +126,7 @@ let mainBall = {
 
 drawBall(mainBall);
 
+
 let littleBalls = [];
 for (let i = 0; i < k; i++) {
     littleBalls[i] = generateRandomLittleBall(i);
@@ -135,6 +137,6 @@ for (let i = 0; i < k; i++) {
 setInterval(() => {
     moveBall(mainBall);
     for (let i = 0; i < k; i++) {
-        moveLittleBall(littleBalls[i]);
+        moveBall(littleBalls[i]);
     }
 }, 40);
