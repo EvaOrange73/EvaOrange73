@@ -14,6 +14,8 @@ function drawBall(ball) {
     svg.appendChild(cir);
     document.body.appendChild(svg);
 
+}
+
 function generateRandomColor() {
     let byte = () => Math.floor(Math.random() * 255);
     return `rgb(${byte()}, ${byte()}, ${byte()}`;
@@ -38,12 +40,14 @@ function calculateDistanceToCursor(ball){
 
 function changeSpeed(ball){
     let distance = calculateDistanceToCursor(ball);
+
     if (distance > 100) {
         ball.speed = V;
     } else if (distance > 40) {
         ball.speed = distance * V / 100;
     } else {
         ball.speed = 0;
+
     }
 }
 
@@ -121,6 +125,7 @@ let mainBall = {
 };
 
 drawBall(mainBall);
+
 
 let littleBalls = [];
 for (let i = 0; i < k; i++) {
