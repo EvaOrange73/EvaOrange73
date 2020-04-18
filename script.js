@@ -3,7 +3,7 @@ function drawBall(ball) {
     svg.setAttribute("width", `${2 * ball.radius}`);
     svg.setAttribute("height", `${2 * ball.radius}`);
     svg.id = ball.name;
-    svg.style.transform = "translate(" + ball.x + "px," + ball.y + "px)";
+    svg.style.transform = "translate(" + (ball.x - ball.radius) + "px," + (ball.y - ball.radius) + "px)";
 
     let cir = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     cir.setAttribute("cx", ball.radius);
@@ -21,19 +21,21 @@ function generateRandomColor() {
 }
 
 function generateRandomLittleBall(i) {
+    let radius = 5 + Math.random() * 10
     return {
         name: String(i),
+        isMainBall: false,
         color: generateRandomColor(),
-        radius: 5 + Math.random() * 10,
+        radius: radius,
         speed: 1 + Math.random() * 2,
         alpha: Math.random() * 2 * Math.PI,
-        x: Math.random() * bodyCoords.right,
-        y: Math.random() * bodyCoords.bottom
+        x: radius + Math.random() * (bodyCoords.right),
+        y: radius + Math.random() * (bodyCoords.bottom),
     };
 }
 
 function calculateDistanceToCursor(ball) {
-    return Math.sqrt((mx - (ball.x + 50)) ** 2 + (my - (ball.y + 50)) ** 2);
+    return Math.sqrt((mx - ball.x) ** 2 + (my - ball.y) ** 2);
 }
 
 function changeSpeed(ball) {
@@ -50,36 +52,32 @@ function changeSpeed(ball) {
 }
 
 function moveBall(ball) {
-    if (ball == mainBall) {
+    if (ball.isMainBall) {
         changeSpeed(ball);
-        ball.alpha = calculateAlpha(ball.x, ball.y, ball.radius, mx, my);
+        ball.alpha = calculateAlpha(ball.x, ball.y, mx, my);
     } else {
-        if (ball.x + 2 * ball.radius >= bodyCoords.right) {
+        if (ball.x + ball.radius >= bodyCoords.right || ball.x - ball.radius <= 0) {
             ball.alpha = Math.PI - ball.alpha;
-        } else if (ball.x <= 0) {
-            ball.alpha = Math.PI - ball.alpha;
-        } else if (ball.y + 2 * ball.radius >= bodyCoords.bottom) {
-            ball.alpha = -ball.alpha;
-        } else if (ball.y <= 0) {
+        } else if (ball.y + ball.radius >= bodyCoords.bottom || ball.y - ball.radius <= 0) {
             ball.alpha = -ball.alpha;
         }
     }
 
-    ball.x = Math.min(bodyCoords.right - ball.radius * 2,
+    ball.x = Math.min(bodyCoords.right - ball.radius,
         Math.max(0, ball.x + ball.speed * Math.cos(ball.alpha)));
 
-    ball.y = Math.min(bodyCoords.bottom - ball.radius * 2,
+    ball.y = Math.min(bodyCoords.bottom - ball.radius,
         Math.max(0, ball.y + ball.speed * Math.sin(ball.alpha)));
 
     let ballHTMLElement = document.getElementById(ball.name);
-    ballHTMLElement.style.transform = "translate(" + ball.x + "px," + ball.y + "px)";
+    ballHTMLElement.style.transform = "translate(" + (ball.x - ball.radius) + "px," + (ball.y - ball.radius) + "px)";
 }
 
-function calculateAlpha(x, y, r, mx, my) {
-    let dx = mx - x - r;
-    let dy = my - y - r;
+function calculateAlpha(x, y, mx, my) {
+    let dx = mx - x;
+    let dy = my - y;
 
-    alpha = Math.atan(dy / dx);
+    let alpha = Math.atan(dy / dx);
     if (dx < 0) {
         return Math.PI + alpha;
     }
@@ -95,15 +93,15 @@ window.onresize = e => bodyCoords = document.body.getBoundingClientRect();
 //Константы для большого шарика
 let BALL_R = 50;
 let V = 7;
-let BALL_X = bodyCoords.right / 2 - BALL_R;
-let BALL_Y = bodyCoords.bottom / 2 - BALL_R;
+let BALL_X = bodyCoords.right / 2;
+let BALL_Y = bodyCoords.bottom / 2;
 
 //Изначальная позиция мышки
 let mx = bodyCoords.right / 2 + 1;
 let my = bodyCoords.bottom / 2 + 1;
 
 //Количество маленьких шариков
-let k = 100;
+let k = 1000;
 
 document.onmousemove = (e) => {
     mx = e.clientX;
@@ -112,6 +110,7 @@ document.onmousemove = (e) => {
 
 let mainBall = {
     name: "mainBall",
+    isMainBall: true,
     radius: BALL_R,
     color: "black",
     speed: V,
@@ -133,7 +132,8 @@ requestAnimationFrame(function f() {
     moveBall(mainBall);
     for (let i = 0; i < k; i++) {
         moveBall(littleBalls[i]);
-    };
+    }
+    ;
     requestAnimationFrame(f);
 });
 
