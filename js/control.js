@@ -8,10 +8,10 @@ function calculateAlphaToCursor(x, y) {
     return calculateAlpha(x, y, mx, my);
 }
 
-function changeBall(ball) {
+function changeBall(ball, dt) {
     let distance = calculateDistanceToCursor(ball.x, ball.y);
     let alpha = calculateAlphaToCursor(ball.x, ball.y);
-    moveBall(ball, distance, alpha);
+    moveBall(ball, distance, alpha, dt);
     redrawBall(ball);
 }
 
@@ -24,10 +24,14 @@ function controlInit() {
         my = e.clientY;
     };
 
+    let t0 = performance.now();
     requestAnimationFrame(function f() {
-        changeBall(mainBall);
+        let dt = performance.now() - t0;
+        // console.log(String(dt));
+        t0 = performance.now();
+        changeBall(mainBall, dt);
         for (let i = 0; i < numberOfLittleBalls; i++) {
-            changeBall(littleBalls[i]);
+            changeBall(littleBalls[i], dt);
         }
         requestAnimationFrame(f);
     });

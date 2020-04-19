@@ -6,23 +6,23 @@ function generateRandomColor() {
 }
 
 function generateRandomLittleBall(i) {
-    let radius = 5 + Math.random() * 10;
+    let radius = MIN_RADIUS + Math.random() * MAX_RADIUS;
     return {
         name: String(i),
         isMainBall: false,
         color: generateRandomColor(),
         radius: radius,
-        speed: 1 + Math.random() * 2,
-        alpha: Math.random() * 2 * Math.PI,
-        x: radius + Math.random() * (bodyCoords.right),
-        y: radius + Math.random() * (bodyCoords.bottom),
+        speed: MIN_SPEED + Math.random() * MAX_SPEED,
+        alpha: Math.random() * MAX_ALPHA,
+        x: radius + Math.random() * MAX_X,
+        y: radius + Math.random() * MAX_Y,
     };
 }
 
 function calculateSpeed(distance) {
-    if (distance > 100) {
+    if (distance > 50) {
         return V;
-    } else if (distance > 40) {
+    } else if (distance > 10) {
         return distance * V / 100;
     } else {
         return 0;
@@ -40,7 +40,7 @@ function calculateAlpha(x, y, toX, toY) {
     return alpha;
 }
 
-function moveBall(ball, distance, alpha) {
+function moveBall(ball, distance, alpha, dt) {
     if (ball.isMainBall) {
         ball.speed = calculateSpeed(distance);
         ball.alpha = alpha;
@@ -53,10 +53,10 @@ function moveBall(ball, distance, alpha) {
     }
 
     ball.x = Math.min(bodyCoords.right - ball.radius,
-        Math.max(0, ball.x + ball.speed * Math.cos(ball.alpha)));
+        Math.max(ball.radius, ball.x + ball.speed * dt * Math.cos(ball.alpha)));
 
     ball.y = Math.min(bodyCoords.bottom - ball.radius,
-        Math.max(0, ball.y + ball.speed * Math.sin(ball.alpha)));
+        Math.max(ball.radius, ball.y + ball.speed * dt * Math.sin(ball.alpha)));
 }
 
 function modelInit() {
@@ -68,7 +68,7 @@ function modelInit() {
         speed: V,
         alpha: 0,
         x: BALL_X,
-        y: BALL_Y
+        y: BALL_Y,
     };
 
     for (let i = 0; i < numberOfLittleBalls; i++) {
