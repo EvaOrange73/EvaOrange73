@@ -34,9 +34,9 @@ function controlInit() {
            changeBallPosition(ball, dt);
         });
 
-        littleBalls.forEach(ball => {
+        littleBalls.forEach((ball, index) => {
             if(calculateDistanceByCoords(ball.x,  ball.y, mainBall.x, mainBall.y) <= mainBall.radius){
-                eatBall(mainBall, ball);
+                eatBall(mainBall, ball, index);
             }
         });
 

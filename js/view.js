@@ -22,7 +22,7 @@ function redrawBall(ball) {
 }
 
 
-function redrawBallWithNewRadius(biggerBall, smallerBall) {
+function redrawBallsAfterEating(biggerBall, smallerBall) {
     let ballHTMLElement = document.getElementById(biggerBall.name);
     ballHTMLElement.setAttribute("width", `${2 * biggerBall.radius}`);
     ballHTMLElement.setAttribute("height", `${2 * biggerBall.radius}`);
