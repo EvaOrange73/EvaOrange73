@@ -68,14 +68,12 @@ function moveBall(ball, distance, alpha, dt) {
 function eatBall(biggerBall, smallerBall) {
     deleteEatenBall(smallerBall);
     biggerBall.radius = biggerBall.radius + GROWTH_COEF * smallerBall.radius;
-    redrawBallWithNewRadius(biggerBall, smallerBall.radius);
+    redrawBallWithNewRadius(biggerBall, smallerBall);
 }
 
 function deleteEatenBall(ball) {
-    document.getElementById(ball.name).remove();
     let numberOfBall = parseInt(ball.name, 10);
     littleBalls.splice(numberOfBall, 1);
-
 }
 
 

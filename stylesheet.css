@@ -1,3 +1,8 @@
+#mainBall {
+    transition: 0.4s;
+    transition-property: width, height;
+}
+
 html, body {
     position: absolute;
     top: 0;

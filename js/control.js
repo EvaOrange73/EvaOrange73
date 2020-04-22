@@ -32,11 +32,14 @@ function controlInit() {
 
         littleBalls.forEach(ball => {
            changeBallPosition(ball, dt);
+        });
+
+        littleBalls.forEach(ball => {
             if(calculateDistanceByCoords(ball.x,  ball.y, mainBall.x, mainBall.y) <= mainBall.radius){
                 eatBall(mainBall, ball);
-
             }
         });
+
         requestAnimationFrame(f);
     });
 }
