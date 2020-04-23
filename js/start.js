@@ -6,7 +6,7 @@ let BALL_R = 50;
 let BALL_X, BALL_Y;
 
 //Константы для маленьких шариков
-let numberOfLittleBalls = 50;
+let numberOfLittleBalls = 500;
 let MIN_RADIUS = 5;
 let MAX_RADIUS = 10;
 let MIN_SPEED = 1 / 20;
