@@ -27,6 +27,9 @@ function controlInit() {
     requestAnimationFrame(function f() {
 
         let dt = performance.now() - currentTime;
+        if(dt >= 1000){
+            dt = 1000
+        }
         currentTime = performance.now();
         changeBallPosition(mainBall, dt);
 

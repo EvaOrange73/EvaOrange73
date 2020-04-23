@@ -4,9 +4,9 @@ let bodyCoords;
 let V = 2 / 20;
 let BALL_R = 50;
 let BALL_X, BALL_Y;
-let GROWTH_COEF = 1;
+
 //Константы для маленьких шариков
-let numberOfLittleBalls = 20;
+let numberOfLittleBalls = 50;
 let MIN_RADIUS = 5;
 let MAX_RADIUS = 10;
 let MIN_SPEED = 1 / 20;

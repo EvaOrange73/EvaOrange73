@@ -65,10 +65,10 @@ function moveBall(ball, distance, alpha, dt) {
     redrawBall(ball);
 }
 
-function eatBall(bigBall, ball, index) {
+function eatBall(bigBall, smallBall, index) {
     littleBalls.splice(index, 1);
-    bigBall.radius = bigBall.radius + GROWTH_COEF * ball.radius;
-    redrawBallsAfterEating(bigBall, ball);
+    bigBall.radius = Math.sqrt(bigBall.radius ** 2 + smallBall.radius ** 2);
+    redrawBallsAfterEating(bigBall, smallBall);
 }
 
 function modelInit() {
