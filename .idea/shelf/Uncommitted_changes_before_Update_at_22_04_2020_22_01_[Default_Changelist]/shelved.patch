@@ -1,0 +1,18 @@
+Index: js/control.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>let mx, my;\r\n\r\nfunction calculateDistanceToCursor(x, y) {\r\n    return Math.sqrt((mx - x) ** 2 + (my - y) ** 2);\r\n}\r\n\r\nfunction calculateAlphaToCursor(x, y) {\r\n    return calculateAlpha(x, y, mx, my);\r\n}\r\n\r\nfunction changeBall(ball, dt) {\r\n    let distance = calculateDistanceToCursor(ball.x, ball.y);\r\n    let alpha = calculateAlphaToCursor(ball.x, ball.y);\r\n    moveBall(ball, distance, alpha, dt);\r\n    redrawBall(ball);\r\n}\r\n\r\nfunction controlInit() {\r\n    //Изначальная позиция мышки\r\n    mx = bodyCoords.right / 2 + 1;\r\n    my = bodyCoords.bottom / 2 + 1;\r\n    document.onmousemove = (e) => {\r\n        mx = e.clientX;\r\n        my = e.clientY;\r\n    };\r\n\r\n    let t0 = performance.now();\r\n    requestAnimationFrame(function f() {\r\n        let dt = performance.now() - t0;\r\n        // console.log(String(dt));\r\n        t0 = performance.now();\r\n        changeBall(mainBall, dt);\r\n        for (let i = 0; i < numberOfLittleBalls; i++) {\r\n            changeBall(littleBalls[i], dt);\r\n        }\r\n        requestAnimationFrame(f);\r\n    });\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- js/control.js	(revision a688ad3ee919047342067f035ca827da3a0757e4)
++++ js/control.js	(date 1587582063935)
+@@ -27,7 +27,7 @@
+     let t0 = performance.now();
+     requestAnimationFrame(function f() {
+         let dt = performance.now() - t0;
+-        // console.log(String(dt));
++        document.onfocus =
+         t0 = performance.now();
+         changeBall(mainBall, dt);
+         for (let i = 0; i < numberOfLittleBalls; i++) {
