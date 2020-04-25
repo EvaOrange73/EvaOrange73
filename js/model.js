@@ -87,4 +87,3 @@ function modelInit() {
         littleBalls[i] = generateRandomLittleBall(i);
     }
 }
-//
