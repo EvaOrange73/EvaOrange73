@@ -71,6 +71,12 @@ function eatBall(bigBall, smallBall, index) {
     redrawBallsAfterEating(bigBall, smallBall);
 }
 
+function addNewBall(i) {
+    let newBall = generateRandomLittleBall(i);
+    littleBalls.splice(parseInt(newBall.name), 0, newBall);
+    return newBall
+}
+
 function modelInit() {
     mainBall = {
         name: "mainBall",

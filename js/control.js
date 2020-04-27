@@ -27,19 +27,20 @@ function controlInit() {
     requestAnimationFrame(function f() {
 
         let dt = performance.now() - currentTime;
-        if(dt >= 1000){
+        if (dt >= 1000) {
             dt = 1000
         }
         currentTime = performance.now();
         changeBallPosition(mainBall, dt);
 
         littleBalls.forEach(ball => {
-           changeBallPosition(ball, dt);
+            changeBallPosition(ball, dt);
         });
 
         littleBalls.forEach((ball, index) => {
-            if(calculateDistanceByCoords(ball.x,  ball.y, mainBall.x, mainBall.y) <= mainBall.radius){
+            if (calculateDistanceByCoords(ball.x, ball.y, mainBall.x, mainBall.y) <= mainBall.radius) {
                 eatBall(mainBall, ball, index);
+                drawBall(addNewBall(index));
             }
         });
 

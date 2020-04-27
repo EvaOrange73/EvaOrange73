@@ -17,8 +17,12 @@ function drawBall(ball) {
 }
 
 function redrawBall(ball) {
+    console.log(ball.name)
     let ballHTMLElement = document.getElementById(ball.name);
-    ballHTMLElement.style.transform = "translate(" + (ball.x - ball.radius) + "px," + (ball.y - ball.radius) + "px)";
+    console.log(ballHTMLElement)
+    if (ballHTMLElement != null) {
+        ballHTMLElement.style.transform = "translate(" + (ball.x - ball.radius) + "px," + (ball.y - ball.radius) + "px)";
+    }
 }
 
 
