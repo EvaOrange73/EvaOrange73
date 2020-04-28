@@ -69,6 +69,11 @@ function eatBall(bigBall, smallBall, index) {
     littleBalls.splice(index, 1);
     bigBall.radius = Math.sqrt(bigBall.radius ** 2 + smallBall.radius ** 2);
     redrawBallsAfterEating(bigBall, smallBall);
+
+    if (bigBall.radius > 50 + colorCounter * 20) {
+        redrawBallWithNewColor(bigBall, color[colorCounter])
+        colorCounter += 1;
+    }
 }
 
 function addNewBall(i) {
@@ -82,7 +87,7 @@ function modelInit() {
         name: "mainBall",
         isMainBall: true,
         radius: BALL_R,
-        color: "black",
+        color: color[0],
         speed: V,
         alpha: 0,
         x: BALL_X,
