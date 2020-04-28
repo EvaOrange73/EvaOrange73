@@ -8,7 +8,7 @@ let color = ["black", "darkviolet", "darkblue", "blue", "green", "yellow", "oran
 let colorCounter = 0;
 
 //Константы для маленьких шариков
-let numberOfLittleBalls = 50;
+let numberOfLittleBalls = 40;
 let MIN_RADIUS = 5;
 let MAX_RADIUS = 10;
 let MIN_SPEED = 1 / 20;
